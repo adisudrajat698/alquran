@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Al-Quran Digital (by adi sudrajat)</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+   <style>
+       /* Custom styles for better Arabic text rendering */
+       body {
+           font-family: 'Inter', sans-serif;
+           background-color: #f0fdf4; /* Light green background */
+       }
+       .amiri-font {
+           font-family: 'Amiri', serif;
+           line-height: 2.5; /* Adjust line height for Arabic text */
+           font-size: 1.8rem; /* Larger font size for Arabic */
+           text-align: right; /* Align Arabic text to the right */
+           direction: rtl; /* Right-to-left direction for Arabic */
+       }
+       .ayat-highlight {
+           background-color: #d1fae5; /* Light teal for highlighting current ayah */
+           border-radius: 0.5rem;
+           padding: 0.5rem;
+       }
+       /* Custom scrollbar for better aesthetics */
+       ::-webkit-scrollbar {
+           width: 8px;
+       }
+       ::-webkit-scrollbar-track {
+           background: #e0f2f7;
+           border-radius: 10px;
+       }
+       ::-webkit-scrollbar-thumb {
+           background: #34d399; /* Green */
+           border-radius: 10px;
+       }
+       ::-webkit-scrollbar-thumb:hover {
+           background: #10b981; /* Darker green */
+       }
+   </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 bg-gradient-to-br from-emerald-50 to-teal-100 text-gray-800">
+
+   <header class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-6 mb-8 text-center">
+       <h1 class="text-4xl font-extrabold text-emerald-700 mb-2">Al-Quran Digital</h1>
+       <p class="text-lg text-gray-600">Baca dan Dengarkan Murottal Al-Quran</p>
+   </header>
+
+   <main class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-6 mb-8">
+       <div class="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+           <label for="surah-select" class="text-xl font-semibold text-emerald-800">Pilih Surah:</label>
+           <select id="surah-select" class="flex-grow p-3 border border-emerald-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-lg bg-white">
+               </select>
+       </div>
+
+       <div class="text-center mb-6">
+           <h2 id="surah-name" class="text-3xl font-bold text-emerald-900 mb-2"></h2>
+           <p id="ayah-info" class="text-xl text-gray-700"></p>
+       </div>
+
+       <div id="arabic-text" class="amiri-font bg-emerald-50 p-6 rounded-xl shadow-inner mb-6 max-h-96 overflow-y-auto border border-emerald-200">
+           <p class="text-gray-500 text-center">Memuat teks Al-Quran...</p>
+       </div>
+
+       <div id="translation-text" class="text-lg text-gray-700 bg-blue-50 p-6 rounded-xl shadow-inner mb-6 max-h-96 overflow-y-auto border border-blue-200">
+           <p class="text-gray-500 text-center">Memuat terjemahan...</p>
+       </div>
+
+       <div class="flex flex-col items-center mb-6">
+           <audio id="audio-player" controls class="w-full max-w-md mb-4 rounded-lg shadow-md"></audio>
+           <p id="audio-status" class="text-sm text-gray-500"></p>
+       </div>
+
+       <div class="flex justify-center gap-4">
+           <button id="prev-ayah-btn" class="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition duration-300 ease-in-out">
+               Ayat Sebelumnya
+           </button>
+           <button id="next-ayah-btn" class="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition duration-300 ease-in-out">
+               Ayat Selanjutnya
+           </button>
+       </div>
+   </main>
+
+   <footer class="w-full max-w-4xl text-center text-gray-500 text-sm py-4">
+       © 2024 Aplikasi Al-Quran Digital. Data dari alquran.cloud.
+   </footer>
+
+   <script>
+       // DOM Elements
+       const surahSelect = document.getElementById('surah-select');
+       const surahNameElem = document.getElementById('surah-name');
+       const ayahInfoElem = document.getElementById('ayah-info');
+       const arabicTextElem = document.getElementById('arabic-text');
+       const translationTextElem = document.getElementById('translation-text');
+       const audioPlayer = document.getElementById('audio-player');
+       const audioStatusElem = document.getElementById('audio-status');
+       const prevAyahBtn = document.getElementById('prev-ayah-btn');
+       const nextAyahBtn = document.getElementById('next-ayah-btn');
+
+       // Global Variables
+       let allSurahs = [];
+       let currentSurahData = null;
+       let currentAyahIndex = 0; // 0-indexed for array access
+
+       // API Endpoints
+       const QURAN_API_BASE_URL = 'https://api.alquran.cloud/v1';
+       const RECITER_EDITION = 'ar.alafasy'; // Murottal by Mishary Alafasy
+       const TRANSLATION_EDITION = 'id.indonesian'; // Indonesian translation
+
+       /**
+        * Fetches the list of all Surahs and populates the dropdown.
+        */
+       async function fetchSurahList() {
+           try {
+               const response = await fetch(`${QURAN_API_BASE_URL}/surah`);
+               const data = await response.json();
+               if (data.status === 'OK') {
+                   allSurahs = data.data;
+                   populateSurahDropdown();
+                   // Load the first surah by default
+                   if (allSurahs.length > 0) {
+                       loadSurah(1); // Load Al-Fatihah
+                   }
+               } else {
+                   console.error('Failed to fetch surah list:', data.message);
+                   arabicTextElem.innerHTML = `<p class="text-red-500 text-center">Gagal memuat daftar surah. Silakan coba lagi nanti.</p>`;
+               }
+           } catch (error) {
+               console.error('Error fetching surah list:', error);
+               arabicTextElem.innerHTML = `<p class="text-red-500 text-center">Terjadi kesalahan jaringan saat memuat daftar surah.</p>`;
+           }
+       }
+
+       /**
+        * Populates the surah selection dropdown with fetched surah names.
+        */
+       function populateSurahDropdown() {
+           surahSelect.innerHTML = ''; // Clear existing options
+           allSurahs.forEach(surah => {
+               const option = document.createElement('option');
+               option.value = surah.number;
+               option.textContent = `${surah.number}. ${surah.englishName} (${surah.name})`;
+               surahSelect.appendChild(option);
+           });
+       }
+
+       /**
+        * Loads the full data for a specific surah (Arabic text and translation).
+        * @param {number} surahNumber - The number of the surah to load.
+        */
+       async function loadSurah(surahNumber) {
+           arabicTextElem.innerHTML = `<p class="text-gray-500 text-center">Memuat Surah ${surahNumber}...</p>`;
+           translationTextElem.innerHTML = `<p class="text-gray-500 text-center">Memuat terjemahan Surah ${surahNumber}...</p>`;
+           audioPlayer.pause();
+           audioPlayer.src = '';
+           audioStatusElem.textContent = 'Memuat audio...';
+
+           try {
+               // Fetch Arabic text
+               const arabicResponse = await fetch(`${QURAN_API_BASE_URL}/surah/${surahNumber}/editions/${RECITER_EDITION},${TRANSLATION_EDITION}`);
+               const arabicData = await arabicResponse.json();
+
+               if (arabicData.status === 'OK' && arabicData.data && arabicData.data.length === 2) {
+                   const arabicSurah = arabicData.data.find(e => e.edition.identifier === RECITER_EDITION);
+                   const translationSurah = arabicData.data.find(e => e.edition.identifier === TRANSLATION_EDITION);
+
+                   if (arabicSurah && translationSurah) {
+                       currentSurahData = {
+                           arabic: arabicSurah,
+                           translation: translationSurah
+                       };
+                       currentAyahIndex = 0; // Reset to first ayah
+                       updateUI();
+                   } else {
+                       console.error('Missing surah data for editions:', arabicData.data);
+                       arabicTextElem.innerHTML = `<p class="text-red-500 text-center">Data surah tidak lengkap.</p>`;
+                       translationTextElem.innerHTML = `<p class="text-red-500 text-center">Data terjemahan tidak lengkap.</p>`;
+                   }
+               } else {
+                   console.error('Failed to fetch surah data:', arabicData.message);
+                   arabicTextElem.innerHTML = `<p class="text-red-500 text-center">Gagal memuat data surah. Silakan coba lagi.</p>`;
+                   translationTextElem.innerHTML = `<p class="text-red-500 text-center">Gagal memuat terjemahan. Silakan coba lagi.</p>`;
+               }
+           } catch (error) {
+               console.error('Error loading surah:', error);
+               arabicTextElem.innerHTML = `<p class="text-red-500 text-center">Terjadi kesalahan jaringan saat memuat surah.</p>`;
+               translationTextElem.innerHTML = `<p class="text-red-500 text-center">Terjadi kesalahan jaringan saat memuat terjemahan.</p>`;
+           }
+       }
+
+       /**
+        * Updates the UI with the current surah and ayah information.
+        */
+       function updateUI() {
+           if (!currentSurahData) return;
+
+           const surah = currentSurahData.arabic;
+           const translation = currentSurahData.translation;
+           const currentAyahArabic = surah.ayahs[currentAyahIndex];
+           const currentAyahTranslation = translation.ayahs[currentAyahIndex];
+
+           // Update Surah Name
+           surahNameElem.textContent = `${surah.number}. ${surah.englishName} (${surah.name})`;
+           ayahInfoElem.textContent = `Ayat ${currentAyahIndex + 1} dari ${surah.numberOfAyahs}`;
+
+           // Display Arabic Text
+           arabicTextElem.innerHTML = '';
+           surah.ayahs.forEach((ayah, index) => {
+               const p = document.createElement('p');
+               p.textContent = ayah.text;
+               p.classList.add('mb-4'); // Margin between ayahs
+               if (index === currentAyahIndex) {
+                   p.classList.add('ayat-highlight');
+               }
+               arabicTextElem.appendChild(p);
+           });
+           // Scroll to the highlighted ayah
+           const highlightedAyah = arabicTextElem.querySelector('.ayat-highlight');
+           if (highlightedAyah) {
+               highlightedAyah.scrollIntoView({ behavior: 'smooth', block: 'center' });
+           }
+
+
+           // Display Translation Text
+           translationTextElem.innerHTML = '';
+           translation.ayahs.forEach((ayah, index) => {
+               const p = document.createElement('p');
+               p.textContent = `${index + 1}. ${ayah.text}`;
+               p.classList.add('mb-4'); // Margin between ayahs
+               if (index === currentAyahIndex) {
+                   p.classList.add('ayat-highlight');
+               }
+               translationTextElem.appendChild(p);
+           });
+           // Scroll to the highlighted ayah
+           const highlightedTranslation = translationTextElem.querySelector('.ayat-highlight');
+           if (highlightedTranslation) {
+               highlightedTranslation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+           }
+
+           // Play Murottal
+           playMurottal(currentAyahArabic.audio);
+
+           // Update navigation button states
+           prevAyahBtn.disabled = currentAyahIndex === 0;
+           nextAyahBtn.disabled = currentAyahIndex === surah.numberOfAyahs - 1;
+       }
+
+       /**
+        * Plays the murottal audio for the given URL.
+        * @param {string} audioUrl - The URL of the audio file.
+        */
+       function playMurottal(audioUrl) {
+           if (audioUrl) {
+               audioPlayer.src = audioUrl;
+               audioPlayer.play()
+                   .then(() => {
+                       audioStatusElem.textContent = 'Memutar audio...';
+                   })
+                   .catch(error => {
+                       console.error('Error playing audio:', error);
+                       audioStatusElem.textContent = 'Gagal memutar audio.';
+                   });
+           } else {
+               audioPlayer.pause();
+               audioPlayer.src = '';
+               audioStatusElem.textContent = 'Audio tidak tersedia untuk ayat ini.';
+           }
+       }
+
+       // Event Listeners
+
+       // When a surah is selected from the dropdown
+       surahSelect.addEventListener('change', (event) => {
+           const surahNumber = parseInt(event.target.value);
+           loadSurah(surahNumber);
+       });
+
+       // When the audio finishes playing, go to the next ayah
+       audioPlayer.addEventListener('ended', () => {
+           if (currentSurahData && currentAyahIndex < currentSurahData.arabic.numberOfAyahs - 1) {
+               currentAyahIndex++;
+               updateUI();
+           } else {
+               audioStatusElem.textContent = 'Selesai memutar surah.';
+           }
+       });
+
+       // Previous Ayah button
+       prevAyahBtn.addEventListener('click', () => {
+           if (currentSurahData && currentAyahIndex > 0) {
+               currentAyahIndex--;
+               updateUI();
+           }
+       });
+
+       // Next Ayah button
+       nextAyahBtn.addEventListener('click', () => {
+           if (currentSurahData && currentAyahIndex < currentSurahData.arabic.numberOfAyahs - 1) {
+               currentAyahIndex++;
+               updateUI();
+           }
+       });
+
+       // Initial load
+       window.onload = fetchSurahList;
+
+   </script>
+</body>
+</html>
