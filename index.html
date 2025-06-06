@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Catat Keuangan Pribadi</title>
+    <title>Dompet Digital Profesional</title>
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- jsPDF library for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -15,59 +15,62 @@
         /* Custom CSS untuk font dan warna */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Warna latar belakang umum yang lebih terang */
+            background-color: #f0f4f8; /* Latar belakang lebih terang dan bersih */
             color: #333;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        /* Sidebar: Lebih gelap dan elegan */
+        /* Sidebar: Warna biru tua solid, modern */
         .sidebar {
-            background-color: #2c3e50; /* Warna sidebar gelap */
-            color: #ecf0f1; /* Warna teks sidebar */
-            width: 280px; /* Lebar sidebar sedikit lebih lebar */
+            background-color: #1a365d; /* Biru tua yang lebih dalam */
+            color: #e2e8f0; /* Teks abu-abu kebiruan terang */
+            width: 280px;
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
-            z-index: 50; /* Z-index lebih tinggi untuk mobile overlay */
-            box-shadow: 2px 0 8px rgba(0,0,0,0.2); /* Bayangan untuk sidebar */
+            z-index: 50;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3); /* Bayangan lebih kuat */
         }
         .sidebar.open {
             transform: translateX(0);
         }
         .sidebar-item {
-            display: flex; /* Menggunakan flexbox untuk ikon dan teks */
+            display: flex;
             align-items: center;
-            padding: 0.75rem 1.25rem; /* Padding lebih besar */
+            padding: 1rem 1.5rem; /* Padding lebih besar */
             border-radius: 0.75rem; /* rounded-lg */
-            font-size: 0.9375rem; /* text-base sedikit lebih kecil */
-            font-weight: 500; /* font-medium */
-            transition: background-color 0.2s, color 0.2s;
+            font-size: 1rem; /* text-base */
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s, transform 0.1s ease;
         }
         .sidebar-item i {
-            margin-right: 0.75rem; /* Spasi antara ikon dan teks */
+            margin-right: 1rem; /* Spasi lebih besar */
+            color: #90cdf4; /* Warna ikon yang kontras */
         }
         .sidebar-item:hover {
-            background-color: #34495e; /* Warna hover untuk item sidebar */
-            color: #ffffff; /* Teks putih saat hover */
+            background-color: #2a4365; /* Warna hover sedikit lebih terang */
+            color: #ffffff;
+            transform: translateX(5px); /* Efek geser kecil */
         }
         .sidebar-item.active {
-            background-color: #3b82f6; /* blue-500 */
+            background-color: #3182ce; /* Biru cerah untuk aktif */
             color: white;
-            font-weight: 600; /* font-semibold */
-            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); /* Bayangan untuk item aktif */
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(49, 130, 206, 0.4); /* Bayangan untuk item aktif */
+            transform: translateX(0); /* Pastikan tidak bergeser jika aktif */
         }
         .header {
-            background-color: #ffffff; /* Warna header putih */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Bayangan header yang lebih halus */
-            z-index: 40; /* Pastikan di atas konten */
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            z-index: 40;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .main-content {
-            background-color: #f9fafb; /* Warna latar belakang konten utama yang lebih cerah */
+            background-color: #f0f4f8; /* Sesuai dengan body */
             transition: background-color 0.3s ease;
         }
         .card {
             background-color: #ffffff;
-            border-radius: 1rem; /* rounded-xl untuk kesan lebih modern */
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08); /* Bayangan kartu yang lebih dalam */
+            border-radius: 1.25rem; /* rounded-2xl untuk kesan lebih lembut */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08); /* Bayangan yang lebih menonjol */
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
         input[type="text"],
@@ -75,14 +78,14 @@
         input[type="number"],
         input[type="date"],
         select {
-            border-color: #e2e8f0; /* gray-200 */
+            border-color: #cbd5e0; /* gray-300 */
             border-width: 1px;
-            border-radius: 0.625rem; /* rounded-lg sedikit lebih besar */
-            padding: 0.75rem 1rem;
+            border-radius: 0.75rem; /* rounded-lg */
+            padding: 0.875rem 1.25rem; /* Padding lebih besar */
             width: 100%;
             outline: none;
-            background-color: #ffffff; /* Background putih untuk input */
-            color: #333;
+            background-color: #ffffff;
+            color: #4a5568; /* Teks abu-abu gelap */
             transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease, box-shadow 0.2s;
         }
         input[type="text"]:focus,
@@ -90,69 +93,72 @@
         input[type="number"]:focus,
         input[type="date"]:focus,
         select:focus {
-            border-color: #3b82f6; /* blue-500 */
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); /* Efek fokus yang lebih lembut */
+            border-color: #3182ce; /* blue-600 */
+            box-shadow: 0 0 0 5px rgba(49, 130, 206, 0.25); /* Efek fokus yang lebih menonjol */
             background-color: #ffffff;
         }
         .btn-primary {
-            background-color: #3b82f6; /* blue-500 */
+            background-image: linear-gradient(to right, #3182ce, #4299e1); /* Gradient biru */
             color: white;
-            padding: 0.75rem 1.5rem; /* Padding tombol lebih besar */
-            border-radius: 0.625rem; /* rounded-lg */
-            font-weight: 600; /* font-semibold */
-            transition: background-color 0.2s, transform 0.1s ease;
-            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+            padding: 1rem 2rem; /* Padding lebih besar untuk tombol utama */
+            border-radius: 0.75rem; /* rounded-xl */
+            font-weight: 700; /* font-bold */
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(49, 130, 206, 0.4);
+            border: none;
         }
         .btn-primary:hover {
-            background-color: #2563eb; /* blue-600 */
-            transform: translateY(-1px); /* Efek angkat sedikit */
-            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+            background-image: linear-gradient(to right, #4299e1, #63b3ed); /* Gradient hover yang lebih cerah */
+            transform: translateY(-2px); /* Efek angkat lebih jelas */
+            box-shadow: 0 6px 15px rgba(49, 130, 206, 0.5);
         }
         .btn-primary:active {
             transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 2px 5px rgba(49, 130, 206, 0.2);
         }
         .btn-danger {
-            background-color: #ef4444; /* red-500 */
+            background-color: #e53e3e; /* red-600 */
             color: white;
-            padding: 0.625rem 1.25rem; /* Padding tombol lebih konsisten */
-            border-radius: 0.5rem; /* rounded-md */
-            font-weight: 500;
+            padding: 0.75rem 1.5rem; /* Padding konsisten */
+            border-radius: 0.625rem; /* rounded-lg */
+            font-weight: 600;
             transition: background-color 0.2s, transform 0.1s ease;
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+            box-shadow: 0 2px 6px rgba(229, 62, 62, 0.3);
+            border: none;
         }
         .btn-danger:hover {
-            background-color: #dc2626; /* red-600 */
+            background-color: #c53030; /* red-700 */
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+            box-shadow: 0 4px 10px rgba(229, 62, 62, 0.4);
         }
         .btn-danger:active {
             transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(239, 68, 68, 0.1);
+            box-shadow: 0 1px 3px rgba(229, 62, 62, 0.1);
         }
         .btn-secondary {
-            background-color: #6b7280; /* gray-500 */
+            background-color: #718096; /* gray-600 */
             color: white;
-            padding: 0.625rem 1.25rem;
-            border-radius: 0.5rem; /* rounded-md */
-            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.625rem;
+            font-weight: 600;
             transition: background-color 0.2s, transform 0.1s ease;
-            box-shadow: 0 2px 4px rgba(107, 114, 128, 0.2);
+            box-shadow: 0 2px 6px rgba(113, 128, 150, 0.3);
+            border: none;
         }
         .btn-secondary:hover {
-            background-color: #4b5563; /* gray-600 */
+            background-color: #5d687b; /* gray-700 */
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(107, 114, 128, 0.3);
+            box-shadow: 0 4px 10px rgba(113, 128, 150, 0.4);
         }
         .btn-secondary:active {
             transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(107, 114, 128, 0.1);
+            box-shadow: 0 1px 3px rgba(113, 128, 150, 0.1);
         }
         .text-income {
-            color: #22c55e; /* green-500 */
+            color: #38a169; /* green-600 */
         }
         .text-expense {
-            color: #ef4444; /* red-500 */
+            color: #e53e3e; /* red-600 */
         }
 
         /* Modal Styles */
@@ -162,108 +168,110 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Lebih gelap */
+            background-color: rgba(0, 0, 0, 0.7); /* Lebih gelap */
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100; /* Z-index lebih tinggi */
+            z-index: 100;
         }
         .modal-content {
             background-color: white;
-            padding: 2.5rem; /* Padding lebih besar */
-            border-radius: 1rem; /* rounded-xl */
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Bayangan modal yang lebih dalam */
+            padding: 3rem; /* Padding lebih besar */
+            border-radius: 1.5rem; /* rounded-3xl */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); /* Bayangan lebih dalam */
             max-width: 90%;
-            width: 550px; /* Lebar modal sedikit lebih lebar */
+            width: 600px; /* Lebar modal lebih lebar */
             position: relative;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            animation: modalFadeIn 0.3s ease-out forwards; /* Animasi fade-in */
+            animation: modalFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .modal-close-btn {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 1.25rem;
+            right: 1.25rem;
             background: none;
             border: none;
-            font-size: 1.75rem; /* Ukuran ikon lebih besar */
+            font-size: 2rem; /* Ukuran ikon lebih besar */
             cursor: pointer;
-            color: #9ca3af; /* gray-400 */
+            color: #a0aec0; /* gray-400 */
             transition: color 0.2s;
         }
         .modal-close-btn:hover {
-            color: #4b5563; /* gray-600 */
+            color: #718096; /* gray-600 */
         }
 
-        /* Chart Styles (tetap pertahankan) */
+        /* Chart Styles */
         .chart-bar-container {
             display: flex;
             align-items: flex-end;
-            height: 180px; /* Fixed height for the chart area */
-            background-color: #e5e7eb; /* gray-200 */
-            border-radius: 0.75rem;
+            height: 200px; /* Tinggi lebih besar */
+            background-color: #edf2f7; /* gray-100 */
+            border-radius: 1rem; /* rounded-xl */
             overflow: hidden;
             position: relative;
             transition: background-color 0.3s ease;
+            padding: 1rem; /* Padding di dalam container chart */
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); /* Inset shadow */
         }
         .chart-bar {
             width: 50%;
             height: 0; /* Initial height */
-            transition: height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth ease-out */
+            transition: height 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth ease-out */
             display: flex;
-            align-items: flex-end;
-            justify-content: center;
+            flex-direction: column; /* Untuk menempatkan label di atas */
+            align-items: center;
+            justify-content: flex-end;
             color: white;
             font-weight: bold;
-            font-size: 0.875rem; /* text-sm */
+            font-size: 1rem; /* text-base */
             position: relative;
-            padding-bottom: 2rem; /* Ruang untuk label di bawah bar */
+            border-radius: 0.5rem 0.5rem 0 0; /* Sudut atas membulat */
+            margin: 0 0.5rem; /* Jarak antar bar */
         }
         .chart-bar span {
             position: absolute;
-            bottom: 0.5rem; /* Label di dalam bar, di bagian bawah */
-            color: white; /* Pastikan teks putih di dalam bar */
+            top: 0.5rem; /* Label di atas bar */
+            color: #ffffff; /* Teks putih di dalam bar */
             font-weight: bold;
             font-size: 0.875rem; /* text-sm */
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3); /* Tambah bayangan teks */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            transform: translateY(-100%); /* Geser ke atas dari bar */
+            white-space: nowrap; /* Jangan putus baris */
         }
         .chart-bar-income {
-            background-color: #22c55e; /* green-500 */
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
+            background-color: #38a169; /* green-600 */
         }
         .chart-bar-expense {
-            background-color: #ef4444; /* red-500 */
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
+            background-color: #e53e3e; /* red-600 */
         }
 
         /* Responsive table for reports */
         .responsive-table {
             width: 100%;
-            border-collapse: separate; /* Menggunakan separate untuk border-radius */
+            border-collapse: separate;
             border-spacing: 0;
         }
         .responsive-table th, .responsive-table td {
-            padding: 1rem; /* Padding lebih besar */
+            padding: 1rem 1.25rem; /* Padding lebih nyaman */
             text-align: left;
-            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
             transition: border-color 0.3s ease;
         }
         .responsive-table th {
-            background-color: #f8f8f8; /* gray-50 */
+            background-color: #f7fafc; /* gray-100 */
             font-weight: 600;
-            color: #4b5563;
+            color: #4a5568; /* Teks abu-abu gelap */
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .responsive-table tbody tr:last-child td {
-            border-bottom: none; /* Hapus border bawah pada baris terakhir */
+            border-bottom: none;
         }
         .responsive-table tbody tr:hover {
-            background-color: #f3f4f6; /* gray-100 saat hover */
+            background-color: #edf2f7; /* gray-100 saat hover */
         }
         @media (max-width: 767px) {
             .responsive-table, .responsive-table thead, .responsive-table tbody, .responsive-table th, .responsive-table td, .responsive-table tr {
@@ -275,17 +283,17 @@
                 left: -9999px;
             }
             .responsive-table tr {
-                margin-bottom: 1.5rem; /* Jarak antar kartu di mobile */
-                border: 1px solid #e5e7eb;
-                border-radius: 0.75rem; /* rounded-lg */
+                margin-bottom: 1.5rem;
+                border: 1px solid #e2e8f0;
+                border-radius: 1rem; /* rounded-xl */
                 overflow: hidden;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
             }
             .responsive-table td {
                 border: none;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid #f0f4f8; /* Lebih lembut */
                 position: relative;
-                padding-left: 50%;
+                padding-left: 55%; /* Ruang lebih untuk label */
                 text-align: right;
             }
             .responsive-table td:last-child {
@@ -294,13 +302,13 @@
             .responsive-table td:before {
                 position: absolute;
                 top: 0;
-                left: 1rem; /* Padding label dari kiri */
+                left: 1.25rem; /* Padding label dari kiri */
                 width: 45%;
                 padding-right: 10px;
                 white-space: nowrap;
                 text-align: left;
                 font-weight: 600;
-                color: #4b5563;
+                color: #4a5568;
             }
             /* Label the data */
             .responsive-table td:nth-of-type(1):before { content: "Deskripsi"; }
@@ -313,174 +321,185 @@
         /* Responsiveness */
         @media (min-width: 768px) {
             .sidebar {
-                transform: translateX(0); /* Sidebar selalu terlihat di desktop */
+                transform: translateX(0);
             }
             .content-wrapper {
-                margin-left: 280px; /* Beri ruang untuk sidebar */
+                margin-left: 280px;
             }
             .menu-button {
-                display: none; /* Sembunyikan tombol menu di desktop */
+                display: none;
             }
         }
 
         /* Notification Styles */
         #notificationContainer {
             position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 1000; /* Z-index sangat tinggi */
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem; /* Jarak antar notifikasi */
+            gap: 1rem; /* Jarak antar notifikasi lebih besar */
             pointer-events: none;
         }
         .notification {
             background-color: #333;
             color: white;
-            padding: 1rem 1.5rem; /* Padding lebih besar */
-            border-radius: 0.75rem; /* rounded-lg */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Bayangan lebih dalam */
+            padding: 1.25rem 1.75rem; /* Padding lebih besar */
+            border-radius: 1rem; /* rounded-xl */
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2); /* Bayangan lebih jelas */
             opacity: 0;
-            transform: translateY(-20px);
-            animation: fadeInOut 3.5s forwards; /* Durasi animasi sedikit lebih panjang */
-            min-width: 250px; /* Lebar minimum */
-            max-width: 350px; /* Lebar maksimum */
+            transform: translateY(-30px);
+            animation: fadeInOut 4s forwards; /* Durasi lebih lama */
+            min-width: 280px;
+            max-width: 400px;
             text-align: center;
             pointer-events: all;
-            font-size: 0.9375rem;
+            font-size: 1rem;
         }
         .notification.success {
-            background-color: #22c55e; /* green-500 */
+            background-color: #38a169; /* green-600 */
         }
         .notification.error {
-            background-color: #ef4444; /* red-500 */
+            background-color: #e53e3e; /* red-600 */
         }
         .notification.info {
-            background-color: #3b82f6; /* blue-500 */
+            background-color: #3182ce; /* blue-600 */
         }
         @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(-20px); }
+            0% { opacity: 0; transform: translateY(-30px); }
             10% { opacity: 1; transform: translateY(0); }
             90% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 0; transform: translateY(-30px); }
         }
 
-        /* New styles for JSON display modal */
+        /* JSON Display Modal */
         #jsonDisplayModal .modal-content {
             width: 90%;
-            max-width: 700px;
+            max-width: 750px;
         }
         #jsonOutput {
             width: 100%;
-            height: 300px;
+            height: 350px; /* Tinggi lebih besar */
             background-color: #f8f8f8;
-            border: 1px solid #ddd;
-            padding: 1rem;
-            font-family: monospace;
+            border: 1px solid #e2e8f0;
+            padding: 1.25rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; /* Font monospace yang umum */
             white-space: pre-wrap;
             word-wrap: break-word;
             overflow-y: scroll;
             resize: vertical;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            font-size: 0.9rem;
+            color: #4a5568;
         }
         #copyJsonBtn {
-            margin-top: 1rem;
+            margin-top: 1.5rem; /* Jarak lebih besar */
             width: 100%;
         }
 
         /* Chatbot styles */
         #chatbotModal .modal-content {
             width: 90%;
-            max-width: 600px;
-            height: 80vh;
+            max-width: 650px;
+            height: 85vh; /* Tinggi lebih besar */
             display: flex;
             flex-direction: column;
         }
         #chatDisplay {
             flex-grow: 1;
             border: 1px solid #e2e8f0;
-            border-radius: 0.75rem; /* Rounded corners */
-            padding: 1.25rem; /* Sedikit lebih banyak padding */
+            border-radius: 1rem; /* Rounded corners */
+            padding: 1.5rem; /* Lebih banyak padding */
             overflow-y: auto;
-            margin-bottom: 1rem;
-            background-color: #f9fafb;
+            margin-bottom: 1.5rem;
+            background-color: #f7fafc; /* Lebih terang */
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .chat-message {
-            margin-bottom: 0.75rem;
-            padding: 0.75rem 1rem; /* Padding pesan lebih besar */
-            border-radius: 0.75rem; /* Rounded corners */
-            max-width: 85%; /* Sedikit lebih lebar */
-            line-height: 1.5;
+            margin-bottom: 1rem; /* Jarak antar pesan */
+            padding: 0.875rem 1.25rem; /* Padding pesan lebih besar */
+            border-radius: 1rem; /* Rounded corners */
+            max-width: 90%; /* Lebih lebar */
+            line-height: 1.6;
+            font-size: 0.95rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Bayangan kecil */
         }
         .chat-message.user {
-            background-color: #dbeafe; /* blue-100 */
+            background-color: #e0f2fe; /* blue-100 */
             align-self: flex-end;
             margin-left: auto;
             text-align: right;
-            color: #1e40af; /* dark blue text */
+            color: #2a699c; /* dark blue text */
         }
         .chat-message.bot {
-            background-color: #e2e8f0; /* gray-200 */
+            background-color: #e6fffa; /* teal-50 */
             align-self: flex-start;
             margin-right: auto;
             text-align: left;
-            color: #374151; /* dark gray text */
+            color: #2c5282; /* dark blue-gray text */
         }
         .chat-options {
             display: flex;
             flex-wrap: wrap;
-            justify-content: flex-start; /* Opsi mulai dari kiri */
-            gap: 0.5rem; /* Jarak antar tombol opsi */
+            justify-content: center; /* Opsi di tengah */
+            gap: 0.75rem; /* Jarak antar tombol opsi */
         }
         .chat-options button {
-            background-color: #e0f2fe; /* light blue */
-            color: #0369a1; /* dark blue */
-            padding: 0.625rem 1.25rem; /* Padding tombol lebih besar */
-            border-radius: 0.625rem; /* rounded-lg */
-            margin: 0; /* Hapus margin asli, gunakan gap */
+            background-color: #4fd1c5; /* Teal cerah */
+            color: white;
+            padding: 0.75rem 1.5rem; /* Padding tombol lebih besar */
+            border-radius: 0.75rem; /* rounded-lg */
+            margin: 0;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s ease;
-            font-size: 0.875rem;
+            transition: background-color 0.2s, transform 0.1s ease, box-shadow 0.2s;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(79, 209, 197, 0.3);
         }
         .chat-options button:hover {
-            background-color: #bae6fd; /* lighter blue */
+            background-color: #38b2ac; /* Teal lebih gelap */
             transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(79, 209, 197, 0.4);
         }
         .chat-options button:active {
             transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(79, 209, 197, 0.2);
         }
 
         /* Dark Mode Styles */
         body.dark-mode {
-            background-color: #1e293b; /* dark gray */
+            background-color: #2d3748; /* dark gray */
             color: #e2e8f0; /* light gray */
         }
         body.dark-mode .sidebar {
             background-color: #1a202c; /* darker sidebar */
-            color: #edf2f7; /* lighter text */
-            box-shadow: 2px 0 8px rgba(0,0,0,0.4);
+            color: #edf2f7;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.6);
         }
         body.dark-mode .sidebar-item:hover {
-            background-color: #2d3748; /* darker hover */
+            background-color: #2d3748;
             color: #e2e8f0;
         }
+        body.dark-mode .sidebar-item i {
+            color: #a0aec0; /* Lighter icon color in dark mode */
+        }
         body.dark-mode .sidebar-item.active {
-            background-color: #63b3ed; /* lighter blue for active */
-            color: #1a202c;
-            box-shadow: 0 2px 4px rgba(99, 179, 237, 0.3);
+            background-color: #4299e1; /* lighter blue for active */
+            color: white;
+            box-shadow: 0 4px 8px rgba(66, 153, 225, 0.4);
         }
         body.dark-mode .header {
             background-color: #2d3748;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         body.dark-mode .main-content {
             background-color: #1a202c;
         }
         body.dark-mode .card {
             background-color: #2d3748;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
         }
         body.dark-mode input[type="text"],
         body.dark-mode input[type="password"],
@@ -494,14 +513,31 @@
         body.dark-mode input::placeholder {
             color: #cbd5e0;
         }
-        body.dark-mode .btn-secondary {
-            background-color: #a0aec0;
+        body.dark-mode .btn-primary {
+            background-image: linear-gradient(to right, #4299e1, #63b3ed);
+            box-shadow: 0 4px 10px rgba(66, 153, 225, 0.4);
+        }
+        body.dark-mode .btn-primary:hover {
+            background-image: linear-gradient(to right, #63b3ed, #90cdf4);
+            box-shadow: 0 6px 15px rgba(66, 153, 225, 0.5);
+        }
+        body.dark-mode .btn-danger {
+            background-color: #fc8181; /* lighter red */
             color: #2d3748;
-            box-shadow: 0 2px 4px rgba(160, 174, 192, 0.2);
+            box-shadow: 0 2px 6px rgba(252, 129, 129, 0.3);
+        }
+        body.dark-mode .btn-danger:hover {
+            background-color: #e53e3e; /* original red */
+            box-shadow: 0 4px 10px rgba(252, 129, 129, 0.4);
+        }
+        body.dark-mode .btn-secondary {
+            background-color: #a0aec0; /* lighter gray */
+            color: #2d3748;
+            box-shadow: 0 2px 6px rgba(160, 174, 192, 0.3);
         }
         body.dark-mode .btn-secondary:hover {
             background-color: #cbd5e0;
-            box-shadow: 0 4px 8px rgba(160, 174, 192, 0.3);
+            box-shadow: 0 4px 10px rgba(160, 174, 192, 0.4);
         }
         body.dark-mode .text-gray-700 {
             color: #cbd5e0;
@@ -524,7 +560,7 @@
         body.dark-mode .modal-content {
             background-color: #2d3748;
             color: #e2e8f0;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.45);
         }
         body.dark-mode .modal-close-btn {
             color: #a0aec0;
@@ -545,12 +581,12 @@
         }
         body.dark-mode .responsive-table tr {
             border-color: #2d3748;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         body.dark-mode .responsive-table td:before {
             color: #a0aec0;
         }
-        body.dark-mode .jsonDisplayModal #jsonOutput {
+        body.dark-mode #jsonOutput {
             background-color: #4a5568;
             border-color: #4a5568;
             color: #e2e8f0;
@@ -569,11 +605,13 @@
             color: #2d3748;
         }
         body.dark-mode .chat-options button {
-            background-color: #63b3ed;
-            color: #1a202c;
+            background-color: #4fd1c5;
+            color: white;
+            box-shadow: 0 2px 5px rgba(79, 209, 197, 0.3);
         }
         body.dark-mode .chat-options button:hover {
-            background-color: #4299e1;
+            background-color: #38b2ac;
+            box-shadow: 0 4px 8px rgba(79, 209, 197, 0.4);
         }
         body.dark-mode .text-income {
             color: #68d391; /* lighter green for dark mode */
@@ -589,6 +627,13 @@
             background-color: #2d3748; /* Darker background for light elements */
             border-color: #4a5568;
         }
+        body.dark-mode .bg-blue-50 {
+            background-color: #2d3748; /* Darker background for light elements */
+            border-color: #4a5568;
+        }
+        body.dark-mode .border-gray-200 {
+            border-color: #4a5568;
+        }
         body.dark-mode .bg-white {
             background-color: #2d3748;
         }
@@ -598,12 +643,12 @@
     <!-- Sidebar -->
     <aside id="sidebar" class="sidebar fixed top-0 left-0 h-full p-6 flex flex-col md:relative md:flex-shrink-0">
         <div class="mb-8 text-center pt-2 pb-4 border-b border-gray-700/50">
-            <img src="https://placehold.co/100x100/3B82F6/FFFFFF?text=AD" alt="Logo Aplikasi" class="mx-auto w-20 h-20 mb-3 rounded-full shadow-md">
+            <img src="https://placehold.co/120x120/3182CE/FFFFFF?text=AD" alt="Logo Aplikasi" class="mx-auto w-24 h-24 mb-3 rounded-full shadow-lg">
             <div class="text-3xl font-bold text-white tracking-wide">AdiWallet</div>
         </div>
 
         <div class="flex flex-col items-center mb-8">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-gray-400 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-blue-300 mb-2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
             </svg>
             <p id="sidebarUsername" class="text-lg font-semibold text-white mt-2"></p>
@@ -611,8 +656,8 @@
         <nav class="flex-grow">
             <ul class="space-y-3">
               <li id="dashboardSidebarItem"><a href="#" class="sidebar-item" data-section="dashboard"><i data-feather="home" class="w-5 h-5"></i> Dashboard </a></li>
-              <li id="transactionsSidebarItem"><a href="#" class="sidebar-item" data-section="transactions"><i data-feather="file-text" class="w-5 h-5"></i> Transaksi </a></li>
-              <li id="budgetingSidebarItem"><a href="#" class="sidebar-item" data-section="budgeting"><i data-feather="credit-card" class="w-5 h-5"></i> Rencana Anggaran </a></li>
+              <li id="transactionsSidebarItem"><a href="#" class="sidebar-item" data-section="transactions"><i data-feather="repeat" class="w-5 h-5"></i> Transaksi </a></li>
+              <li id="budgetingSidebarItem"><a href="#" class="sidebar-item" data-section="budgeting"><i data-feather="target" class="w-5 h-5"></i> Rencana Anggaran </a></li>
               <li id="reportsSidebarItem"><a href="#" class="sidebar-item" data-section="reports"><i data-feather="bar-chart-2" class="w-5 h-5"></i> Laporan </a></li>
               <li id="analysisSidebarItem"><a href="#" class="sidebar-item" data-section="analysis"><i data-feather="pie-chart" class="w-5 h-5"></i> Analisis Keuangan </a></li>
               <li id="settingsSidebarItem"><a href="#" class="sidebar-item" data-section="settings"><i data-feather="settings" class="w-5 h-5"></i> Pengaturan </a></li>
@@ -620,7 +665,7 @@
             </ul>
         </nav>
         <div class="mt-auto pt-4 border-t border-gray-700/50">
-            <button id="logoutBtn" class="w-full btn-primary text-base font-semibold py-3 px-4 rounded-lg">Logout</button>
+            <button id="logoutBtn" class="w-full btn-primary">Logout</button>
         </div>
     </aside>
 
@@ -630,7 +675,7 @@
             <button id="menuBtn" class="menu-button text-gray-600 focus:outline-none p-2 rounded-md hover:bg-gray-100 transition-colors">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
-            <h1 class="text-xl font-semibold text-gray-800">Keuangan Pribadi</h1>
+            <h1 class="text-xl font-semibold text-gray-800">AdiWallet</h1>
             <div class="w-7 h-7"></div> <!-- Placeholder untuk menjaga keseimbangan -->
         </header>
 
@@ -639,10 +684,10 @@
             <section id="authSection" class="flex items-center justify-center min-h-screen-minus-header">
                 <div class="card p-8 w-full max-w-md">
                    <div class="flex flex-col items-center mb-6">
-                        <img src="https://placehold.co/120x120/3B82F6/FFFFFF?text=AD" alt="Logo Aplikasi" class="w-24 h-24 mb-3 rounded-full shadow-md">
-                        <h2 class="text-3xl font-bold text-center text-gray-800" id="authTitle">Login</h2>
+                        <img src="https://placehold.co/150x150/3182CE/FFFFFF?text=AD" alt="Logo Aplikasi" class="w-32 h-32 mb-4 rounded-full shadow-lg">
+                        <h2 class="text-4xl font-extrabold text-center text-gray-800" id="authTitle">Login</h2>
                     </div>
-                    <form id="authForm" class="space-y-5">
+                    <form id="authForm" class="space-y-6">
                         <div>
                             <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             <input type="email" id="username" name="username" required class="block w-full">
@@ -654,7 +699,7 @@
                         <p id="authMessage" class="text-red-500 text-sm hidden text-center"></p>
                         <button type="submit" id="authSubmitBtn" class="w-full btn-primary">Login</button>
                     </form>
-                    <p class="text-center text-sm mt-5 text-gray-600">
+                    <p class="text-center text-base mt-6 text-gray-600">
                         <a href="#" id="forgotPasswordLink" class="text-blue-600 hover:underline">Lupa Kata Sandi?</a>
                         <span class="mx-2">|</span>
                         Belum punya akun? <a href="#" id="toggleAuthMode" class="text-blue-600 hover:underline">Daftar di sini</a>
@@ -665,25 +710,25 @@
             <!-- Dashboard Section -->
             <section id="dashboardSection" class="hidden">
                 <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
-                <div class="flex items-center gap-4 mb-8 p-4 bg-blue-50 rounded-lg shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-9 h-9 text-blue-500">
+                <div class="flex items-center gap-4 mb-8 p-4 bg-blue-50 rounded-xl shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-9 h-9 text-blue-600">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
                     <p class="text-xl text-gray-700">Selamat datang, <span id="dashboardUsername" class="font-semibold text-blue-700"></span>!</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="card p-6 text-center flex flex-col items-center">
-                        <i data-feather="dollar-sign" class="w-12 h-12 text-blue-500 mb-3"></i>
+                        <i data-feather="credit-card" class="w-14 h-14 text-blue-500 mb-4"></i>
                         <h3 class="text-lg font-medium text-gray-600">Saldo Saat Ini</h3>
-                        <p id="currentBalance" class="text-4xl font-bold mt-2 text-gray-800">Rp 0</p>
+                        <p id="currentBalance" class="text-5xl font-extrabold mt-2 text-gray-800">Rp 0</p>
                     </div>
                     <div class="card p-6 text-center flex flex-col items-center">
-                        <i data-feather="arrow-down-left" class="w-12 h-12 text-green-500 mb-3"></i>
+                        <i data-feather="arrow-down-left" class="w-14 h-14 text-green-600 mb-4"></i>
                         <h3 class="text-lg font-medium text-gray-600">Total Pemasukan</h3>
                         <p id="totalIncome" class="text-3xl font-bold text-income mt-2">Rp 0</p>
                     </div>
                     <div class="card p-6 text-center flex flex-col items-center">
-                        <i data-feather="arrow-up-right" class="w-12 h-12 text-red-500 mb-3"></i>
+                        <i data-feather="arrow-up-right" class="w-14 h-14 text-red-600 mb-4"></i>
                         <h3 class="text-lg font-medium text-gray-600">Total Pengeluaran</h3>
                         <p id="totalExpense" class="text-3xl font-bold text-expense mt-2">Rp 0</p>
                     </div>
@@ -716,7 +761,7 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-6">Transaksi</h2>
                 <div class="card p-6 mb-8">
                     <h3 class="text-2xl font-bold text-gray-800 mb-4">Tambah Transaksi Baru</h3>
-                    <form id="transactionForm" class="space-y-4">
+                    <form id="transactionForm" class="space-y-5">
                         <div>
                             <label for="transactionDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
                             <input type="date" id="transactionDate" required class="block">
@@ -794,7 +839,7 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-6">Rencana Anggaran</h2>
                 <div class="card p-6 mb-8">
                     <h3 class="text-2xl font-bold text-gray-800 mb-4">Tetapkan Anggaran Baru</h3>
-                    <form id="budgetForm" class="space-y-4">
+                    <form id="budgetForm" class="space-y-5">
                         <div>
                             <label for="budgetItemCategory" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
                             <select id="budgetItemCategory" required class="block">
@@ -943,10 +988,10 @@
                             /* Custom styles for the toggle switch */
                             .toggle-checkbox:checked {
                                 right: 0;
-                                border-color: #3b82f6; /* blue-500 */
+                                border-color: #3182ce; /* blue-600 */
                             }
                             .toggle-checkbox:checked + .toggle-label {
-                                background-color: #3b82f6; /* blue-500 */
+                                background-color: #3182ce; /* blue-600 */
                             }
                             .toggle-label {
                                 transition: background-color 0.2s ease;
@@ -960,7 +1005,7 @@
 
                 <div class="card p-6 mb-8">
                     <h3 class="text-2xl font-bold text-gray-800 mb-4">Ubah Kata Sandi</h3>
-                    <form id="changePasswordForm" class="space-y-4">
+                    <form id="changePasswordForm" class="space-y-5">
                         <div>
                             <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi Saat Ini</label>
                             <input type="password" id="currentPassword" required class="block">
@@ -1011,7 +1056,7 @@
                     <button id="exportDataBtn" class="btn-primary">Ekspor Transaksi ke CSV</button>
                 </div>
 
-                <div class="card p-6 mt-8 border border-red-200 bg-red-50">
+                <div class="card p-6 mt-8 border border-red-300 bg-red-100">
                     <h3 class="text-2xl font-bold mb-4 text-red-700">Hapus Akun</h3>
                     <p class="text-gray-700 mb-4">Menghapus akun Anda akan menghapus semua data Anda secara permanen. Tindakan ini tidak dapat dibatalkan.</p>
                     <button id="deleteAccountBtn" class="w-full btn-danger">Hapus Akun Saya</button>
@@ -1035,7 +1080,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-gray-800 text-white text-center p-4 text-sm mt-auto shadow-inner">
+        <footer class="bg-gray-900 text-white text-center p-5 text-sm mt-auto shadow-inner">
             &copy; 2025 by Adi Sudrajat. All rights reserved.
         </footer>
     </div>
@@ -1058,7 +1103,7 @@
         <div class="modal-content">
             <button class="modal-close-btn" onclick="hideEditTransactionModal()">&times;</button>
             <h3 class="text-2xl font-bold text-gray-800 mb-4">Edit Transaksi</h3>
-            <form id="editTransactionForm" class="space-y-4">
+            <form id="editTransactionForm" class="space-y-5">
                 <input type="hidden" id="editTransactionId">
                 <div>
                     <label for="editTransactionDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
@@ -1105,7 +1150,7 @@
         <div class="modal-content">
             <button class="modal-close-btn" onclick="hideForgotPasswordModal()">&times;</button>
             <h3 class="text-2xl font-bold text-gray-800 mb-4">Lupa Kata Sandi</h3>
-            <form id="forgotPasswordForm" class="space-y-4">
+            <form id="forgotPasswordForm" class="space-y-5">
                 <div>
                     <label for="forgotPasswordEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                     <input type="email" id="forgotPasswordEmail" placeholder="Masukkan email Anda" required class="block">
@@ -2441,12 +2486,12 @@
             const incomeBar = document.createElement('div');
             incomeBar.className = 'chart-bar chart-bar-income';
             incomeBar.style.height = `${incomeHeight}%`;
-            incomeBar.innerHTML = `<span>Pemasukan</span>`;
+            incomeBar.innerHTML = `<span>${formatRupiah(income)}</span>`; /* Tampilkan jumlah di bar */
 
             const expenseBar = document.createElement('div');
             expenseBar.className = 'chart-bar chart-bar-expense';
             expenseBar.style.height = `${expenseHeight}%`;
-            expenseBar.innerHTML = `<span>Pengeluaran</span>`;
+            expenseBar.innerHTML = `<span>${formatRupiah(expense)}</span>`; /* Tampilkan jumlah di bar */
 
             incomeExpenseChart.appendChild(incomeBar);
             incomeExpenseChart.appendChild(expenseBar);
@@ -2463,7 +2508,7 @@
 
             sortedCategories.forEach(([category, amount]) => {
                 const div = document.createElement('div');
-                div.className = 'flex justify-between items-center text-sm py-1.5 border-b border-gray-100 last:border-b-0';
+                div.className = 'flex justify-between items-center text-sm py-2 border-b border-gray-100 last:border-b-0';
                 div.innerHTML = `
                     <span class="text-gray-700">${category}</span>
                     <span class="font-semibold ${type === 'income' ? 'text-income' : 'text-expense'}">${formatRupiah(amount)}</span>
@@ -2702,16 +2747,18 @@
                         {
                             label: 'Pemasukan Bulanan',
                             data: incomeData,
-                            backgroundColor: 'rgba(34, 197, 94, 0.6)', // green-500
-                            borderColor: 'rgba(34, 197, 94, 1)',
-                            borderWidth: 1
+                            backgroundColor: 'rgba(56, 161, 105, 0.8)', /* green-600 with opacity */
+                            borderColor: 'rgba(56, 161, 105, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6 /* Rounded bars */
                         },
                         {
                             label: 'Pengeluaran Bulanan',
                             data: expenseData,
-                            backgroundColor: 'rgba(239, 68, 68, 0.6)', // red-500
-                            borderColor: 'rgba(239, 68, 68, 1)',
-                            borderWidth: 1
+                            backgroundColor: 'rgba(229, 62, 62, 0.8)', /* red-600 with opacity */
+                            borderColor: 'rgba(229, 62, 62, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6 /* Rounded bars */
                         }
                     ]
                 },
@@ -2728,6 +2775,9 @@
                             },
                             ticks: {
                                 color: document.body.classList.contains('dark-mode') ? '#a0aec0' : '#333'
+                            },
+                            grid: {
+                                display: false /* Hide grid lines */
                             }
                         },
                         y: {
@@ -2766,7 +2816,10 @@
                         },
                         legend: {
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333'
+                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333',
+                                font: {
+                                    size: 14
+                                }
                             }
                         }
                     }
@@ -2834,7 +2887,10 @@
                         },
                         legend: {
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333'
+                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333',
+                                font: {
+                                    size: 14
+                                }
                             }
                         }
                     }
@@ -2937,26 +2993,26 @@
                         {
                             label: 'Pemasukan Bulanan',
                             data: incomeData,
-                            borderColor: 'rgba(34, 197, 94, 1)', // green-500
-                            backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                            borderColor: 'rgba(56, 161, 105, 1)', /* green-600 */
+                            backgroundColor: 'rgba(56, 161, 105, 0.2)',
                             fill: true,
-                            tension: 0.3
+                            tension: 0.4 /* Lebih smooth */
                         },
                         {
                             label: 'Pengeluaran Bulanan',
                             data: expenseData,
-                            borderColor: 'rgba(239, 68, 68, 1)', // red-500
-                            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                            borderColor: 'rgba(229, 62, 62, 1)', /* red-600 */
+                            backgroundColor: 'rgba(229, 62, 62, 0.2)',
                             fill: true,
-                            tension: 0.3
+                            tension: 0.4
                         },
                         {
                             label: 'Saldo Kumulatif',
                             data: balanceData,
-                            borderColor: 'rgba(59, 130, 246, 1)', // blue-500
-                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgba(49, 130, 206, 1)', /* blue-600 */
+                            backgroundColor: 'rgba(49, 130, 206, 0.2)',
                             fill: true,
-                            tension: 0.3
+                            tension: 0.4
                         }
                     ]
                 },
@@ -2972,6 +3028,9 @@
                             },
                             ticks: {
                                 color: document.body.classList.contains('dark-mode') ? '#a0aec0' : '#333'
+                            },
+                             grid: {
+                                display: false /* Hide grid lines */
                             }
                         },
                         y: {
@@ -3009,7 +3068,10 @@
                         },
                         legend: {
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333'
+                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333',
+                                font: {
+                                    size: 14
+                                }
                             }
                         }
                     }
@@ -3063,7 +3125,8 @@
                         data: data,
                         backgroundColor: backgroundColors,
                         borderColor: borderColors,
-                        borderWidth: 1
+                        borderWidth: 1,
+                        borderRadius: 6 /* Rounded bars */
                     }]
                 },
                 options: {
@@ -3085,7 +3148,7 @@
                                 color: document.body.classList.contains('dark-mode') ? '#a0aec0' : '#333'
                             },
                             grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                                display: false /* Hide grid lines */
                             }
                         },
                         y: {
@@ -3116,7 +3179,10 @@
                         },
                         legend: {
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333'
+                                color: document.body.classList.contains('dark-mode') ? '#e2e8f0' : '#333',
+                                font: {
+                                    size: 14
+                                }
                             }
                         }
                     }
@@ -3143,7 +3209,7 @@
 
             sortedCategories.forEach(([category, amount]) => {
                 const div = document.createElement('div');
-                div.className = 'flex justify-between items-center text-sm py-1.5 border-b border-gray-100 last:border-b-0';
+                div.className = 'flex justify-between items-center text-base py-2 border-b border-gray-100 last:border-b-0';
                 div.innerHTML = `
                     <span class="text-gray-700">${category}</span>
                     <span class="font-semibold ${type === 'income' ? 'text-income' : 'text-expense'}">${formatRupiah(amount)}</span>
@@ -3818,4 +3884,3 @@
     </script>
 </body>
 </html>
-
